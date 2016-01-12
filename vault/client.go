@@ -1,10 +1,19 @@
 package vault
 
-import "github.com/hashicorp/vault/api"
+import (
+	"fmt"
 
-var DefaultConfig *api.Config
+	"github.com/hashicorp/vault/api"
+)
+
+var (
+	DefaultConfig *api.Config
+)
 
 func Client(token string) (*api.Client, error) {
+	if DefaultConfig == nil {
+		return nil, fmt.Errorf("Config was nil")
+	}
 	client, err := api.NewClient(DefaultConfig)
 	if err != nil {
 		return nil, err

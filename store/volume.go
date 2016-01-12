@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/calavera/docker-volume-vault/fs"
-	"github.com/calavera/docker-volume-vault/vault"
+	"github.com/ChrisMcKenzie/docker-volume-vault/fs"
+	"github.com/ChrisMcKenzie/docker-volume-vault/vault"
 	"github.com/hanwen/go-fuse/fuse"
 	"github.com/hanwen/go-fuse/fuse/nodefs"
 )
@@ -40,7 +40,7 @@ func (v *Volume) Mount(root string) (string, error) {
 		return m, nil
 	}
 
-	log.Printf("Mounting volume %s on %s\n", v.Name, m)
+	log.Printf("[INF]: Mounting volume %s on %s\n", v.Name, m)
 	fi, err := os.Lstat(m)
 	if os.IsNotExist(err) {
 		if err := os.MkdirAll(m, 0755); err != nil {

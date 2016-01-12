@@ -1,6 +1,7 @@
 package fs
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -54,10 +55,15 @@ func (f *fs) GetAttr(name string, context *fuse.Context) (*fuse.Attr, fuse.Statu
 			return nil, fuse.ENOENT
 		}
 
+		fmt.Println(name, ":", s)
+
 		if s == nil || s.Data == nil {
 			attr = f.directoryAttr(1, 0755)
 		} else {
-			attr = f.secretAttr(s.Data["value"].(string) + "\n")
+			fmt.Println(s.Data["value"])
+			if value, ok := s.Data["value"]; ok {
+				attr = f.secretAttr(value.(string) + "\n")
+			}
 		}
 	}
 
@@ -77,6 +83,7 @@ func (f *fs) Open(name string, flags uint32, context *fuse.Context) (nodefs.File
 	case name == "secret" || name == "sys":
 		return nil, EISDIR
 	case strings.HasPrefix(name, "secret/"):
+		fmt.Println("got here")
 		s, err := f.client.Logical().Read(name)
 		if err != nil {
 			log.Println(err)
